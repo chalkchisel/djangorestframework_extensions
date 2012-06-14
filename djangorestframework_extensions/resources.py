@@ -1,5 +1,6 @@
 from django.db.models import Manager, Model
 from django.db.models.base import ModelBase
+from django.db.models.fields.files import FieldFile
 from djangorestframework.resources import Resource
 from djangorestframework.serializer import _RegisterSerializer, Serializer
 
@@ -18,6 +19,14 @@ class _RegisterDefaultResource(_RegisterSerializer):
         if ret.model and ret.model not in _model_resources:
             _model_resources[ret.model] = ret
         return ret
+
+
+class FileFieldURLMixin(object):
+    def serialize(self, obj):
+        if isinstance(obj, FieldFile):
+            return self.serialize_fallback(obj.url)
+        else:
+            return super(FileFieldURLMixin, self).serialize(obj)
 
 
 class DynamicSerializerMixin(object):
@@ -56,7 +65,7 @@ class DynamicSerializerMixin(object):
         return ser_obj.serialize(obj)
 
 
-class DynamicSerializer(DynamicSerializerMixin, Resource):
+class DynamicSerializer(DynamicSerializerMixin, FileFieldURLMixin, Resource):
     def __init__(self, *args, **kwargs):
         self._args = args
         self._kwargs = kwargs
