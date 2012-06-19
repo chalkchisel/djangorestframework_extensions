@@ -1,7 +1,7 @@
 from django.db.models import Manager, Model
 from django.db.models.base import ModelBase
 from django.db.models.fields.files import FieldFile
-from djangorestframework.resources import Resource
+from djangorestframework.resources import Resource as _OriginalResource
 from djangorestframework.serializer import _RegisterSerializer, Serializer
 
 _model_resources = {}
@@ -65,7 +65,7 @@ class DynamicSerializerMixin(object):
         return ser_obj.serialize(obj)
 
 
-class DynamicSerializer(DynamicSerializerMixin, FileFieldURLMixin, Resource):
+class DynamicSerializer(DynamicSerializerMixin, FileFieldURLMixin, _OriginalResource):
     def __init__(self, *args, **kwargs):
         self._args = args
         self._kwargs = kwargs
@@ -94,5 +94,9 @@ class DynamicSerializer(DynamicSerializerMixin, FileFieldURLMixin, Resource):
         return [self.serialize(item) for item in obj]
 
 
-class DefaultResource(DynamicSerializerMixin, Resource):
+class Resource(DynamicSerializerMixin, _OriginalResource):
+    pass
+
+
+class DefaultResource(Resource):
     __metaclass__ = _RegisterDefaultResource

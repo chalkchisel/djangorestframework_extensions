@@ -159,7 +159,6 @@ PERMISSION_LOOKUP = {
 class DefaultPermissions(InstancePermission, BaseWhitelistPermission):
     def check_permission(self, user):
         action = PERMISSION_LOOKUP.get(self.view.method, "NONE")
-        instance = self.get_instance()
-        meta = instance._meta
+        meta = self.view.resource.model._meta
         permission = "%s.%s_%s" % (meta.app_label, action, meta.object_name.lower())
         return user.has_perm(permission)
