@@ -16,7 +16,7 @@ class RoleBasedExclusion(object):
             elif user.is_staff:
                 return exclude.get('staff', ())
 
-            for test, exclusion in exclude('roles', ()):
+            for test, exclusion in exclude.get('roles', ()):
                 if user_passes_test(user, test):
                     return exclusion
 
