@@ -1,4 +1,9 @@
+from djangorestframework.mixins import ModelMixin, CreateModelMixin, \
+    UpdateModelMixin
 from djangorestframework_extensions.utils import user_passes_test
+
+__all__ = ['RoleBasedExclusion', 'RestrictedModelMixin',
+    'RestrictedCreateModelMixin', 'RestrictedUpdateModelMixin']
 
 
 class RoleBasedExclusion(object):
@@ -34,3 +39,17 @@ class RoleBasedExclusion(object):
             fields = set(default + list(include)) - set(exclude)
 
         return fields
+
+
+class RestrictedModelMixin(RoleBasedExclusion, ModelMixin):
+    pass
+
+
+class RestrictedCreateModelMixin(RestrictedModelMixin, CreateModelMixin):
+    def post(self, request, *args, **kwargs):
+        pass
+
+
+class RestrictedUpdateModelMixin(RestrictedModelMixin, UpdateModelMixin):
+    def put(self, request, *args, **kwargs):
+        pass

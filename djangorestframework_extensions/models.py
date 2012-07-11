@@ -21,3 +21,5 @@ def ensure_view_permission(app, created_models, **kwargs):
 
         if created:
             print "Added view_%s permission" % obj_name
+
+from djangorestframework_extensions import renderers  # Make sure we register our new renderers
